@@ -12,14 +12,17 @@ This is a public setup page for AashniTanna's SUEWS Community Hackathon practice
 
 ## Example SUEWS Run
 
-The example run is in `analysis/suews-example/`.
+The example run evidence is in `analysis/suews-example/`.
 
-- Config: `analysis/suews-example/sample_config.yml`
-- Forcing: `analysis/suews-example/Kc_2012_data_60.txt`
-- Output: `analysis/suews-example/Output/KCL1_2012_SUEWS_60.txt`
+Remote evidence files pushed to GitHub:
+
+- Run note: `analysis/suews-example/README.md`
 - Provenance: `analysis/suews-example/Output/provenance.json`
 - Diagnostics: `analysis/suews-example/Output/diagnostics.json`
 - Summary: `analysis/suews-example/Output/summary.json`
+- SuPy log: `SuPy.log`
+
+The full generated config, forcing file, and raw output were produced in the local clone during setup. The compact files above preserve the setup result and caveats without committing the full sample forcing dataset.
 
 The readiness check says this case is not a real site setup: location, land-cover fractions, and forcing are still the bundled KCL/London sample defaults. That is acceptable for a setup smoke test, but those values must be replaced for the actual hackathon city.
 
