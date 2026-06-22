@@ -1,0 +1,22 @@
+{
+  "run_type": "suews-agent smoke test",
+  "purpose": "Confirm that the suews plugin, suews-mcp, SuPy, and SUEWS CLI can initialise, validate, run, and diagnose a bundled example case end to end.",
+  "repository": "https://github.com/AashniTanna/suews-community-hackathon-2026",
+  "repository_commit_before_setup": "382a35ae93524139e429b8f589762b4b873d9ec0",
+  "config_path": "analysis/suews-example/sample_config.yml",
+  "forcing_file": "analysis/suews-example/Kc_2012_data_60.txt",
+  "output_file": "analysis/suews-example/Output/KCL1_2012_SUEWS_60.txt",
+  "command": "/private/tmp/suews-hackathon-venv/bin/suews run analysis/suews-example/sample_config.yml",
+  "suews_version": "2026.6.5",
+  "supy_version": "2026.6.5",
+  "suews_mcp_version": "0+unknown",
+  "plugin": "suews@suews 0.2.0",
+  "started_at_utc": "2026-06-22T19:21:01Z",
+  "completed_at_utc": "2026-06-22T19:21:27Z",
+  "readiness_summary": "Not ready for a real site: location, land-cover fractions, and forcing are still the bundled KCL/London sample defaults.",
+  "notes": [
+    "This is a setup smoke test, not a heat-risk result for the hackathon city.",
+    "The generated config was validated successfully before the run.",
+    "The output contains 71 hourly records plus a header."
+  ]
+}
