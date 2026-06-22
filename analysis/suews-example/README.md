@@ -14,12 +14,19 @@ suews summarise --variables QN,QH,QE,QS,QF --format json analysis/suews-example/
 
 ## Result
 
-The run completed and wrote `Output/KCL1_2012_SUEWS_60.txt` with 71 hourly records plus a header.
+The local run completed and wrote `Output/KCL1_2012_SUEWS_60.txt` with 71 hourly records plus a header.
+
+The compact evidence pushed to GitHub is:
+
+- `Output/provenance.json`
+- `Output/diagnostics.json`
+- `Output/summary.json`
+- `../../SuPy.log`
 
 The saved diagnostics report 3 passing checks and 1 warning:
 
 - Pass: `provenance.json` present.
-- Pass: output file present.
+- Pass: output file present during local diagnosis.
 - Pass: NaN fractions within 5 percent on `QH`, `QE`, and `QN`.
 - Warning: mean closure residual 7.283 exceeds 0.10.
 
