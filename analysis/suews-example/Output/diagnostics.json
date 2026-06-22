@@ -1,0 +1,72 @@
+{
+  "status": "warning",
+  "data": {
+    "run_dir": "analysis/suews-example/Output",
+    "checks": [
+      {
+        "name": "provenance_present",
+        "severity": "pass",
+        "passed": true,
+        "message": "provenance.json present.",
+        "details": {
+          "path": "analysis/suews-example/Output/provenance.json"
+        }
+      },
+      {
+        "name": "output_files_present",
+        "severity": "pass",
+        "passed": true,
+        "message": "Found 1 output file(s).",
+        "details": {
+          "files": [
+            "analysis/suews-example/Output/KCL1_2012_SUEWS_60.txt"
+          ]
+        }
+      },
+      {
+        "name": "nan_proportion",
+        "severity": "pass",
+        "passed": true,
+        "message": "NaN fractions within 5% on QH/QE/QN.",
+        "details": {
+          "fractions": {
+            "QH": 0.0,
+            "QE": 0.0,
+            "QN": 0.0
+          }
+        }
+      },
+      {
+        "name": "energy_balance_closure",
+        "severity": "warning",
+        "passed": false,
+        "message": "Mean closure residual 7.283 exceeds 0.10.",
+        "details": {
+          "ratio_mean": 7.282666809634313,
+          "n_rows": 70
+        }
+      }
+    ],
+    "summary": {
+      "n_pass": 3,
+      "n_warn": 1,
+      "n_fail": 0
+    },
+    "recommendations": [
+      "Review storage_heat / emissions physics options and check land-cover fractions sum to 1.0."
+    ]
+  },
+  "errors": [],
+  "warnings": [
+    "Mean closure residual 7.283 exceeds 0.10."
+  ],
+  "meta": {
+    "schema_version": "2026.5",
+    "suews_version": "2026.6.5",
+    "supy_version": "2026.6.5",
+    "git_commit": "9dae7a8",
+    "command": "suews diagnose diagnose --format json analysis/suews-example/Output",
+    "started_at": "2026-06-22T19:23:31Z",
+    "ended_at": "2026-06-22T19:23:31Z"
+  }
+}
