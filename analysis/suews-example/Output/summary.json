@@ -1,0 +1,60 @@
+{
+  "status": "success",
+  "data": {
+    "run_dir": "analysis/suews-example/Output",
+    "period": {
+      "start": null,
+      "end": null
+    },
+    "n_steps": 71,
+    "variables": [
+      {
+        "name": "QN",
+        "mean": -20.04905915492958,
+        "min": -58.828,
+        "max": 133.8234,
+        "nan_pct": 0.0
+      },
+      {
+        "name": "QH",
+        "mean": 68.48979014084509,
+        "min": -18.5575,
+        "max": 177.2594,
+        "nan_pct": 0.0
+      },
+      {
+        "name": "QE",
+        "mean": 32.14418873239437,
+        "min": 7.0328,
+        "max": 121.4553,
+        "nan_pct": 0.0
+      },
+      {
+        "name": "QS",
+        "mean": -30.429547887323942,
+        "min": -67.7956,
+        "max": 53.4259,
+        "nan_pct": 0.0
+      },
+      {
+        "name": "QF",
+        "mean": 90.25347605633804,
+        "min": 35.2831,
+        "max": 142.0191,
+        "nan_pct": 0.0
+      }
+    ],
+    "notes": []
+  },
+  "errors": [],
+  "warnings": [],
+  "meta": {
+    "schema_version": "2026.5",
+    "suews_version": "2026.6.5",
+    "supy_version": "2026.6.5",
+    "git_commit": "9dae7a8",
+    "command": "suews summarise summarise --variables QN,QH,QE,QS,QF --format json analysis/suews-example/Output",
+    "started_at": "2026-06-22T19:23:42Z",
+    "ended_at": "2026-06-22T19:23:42Z"
+  }
+}
