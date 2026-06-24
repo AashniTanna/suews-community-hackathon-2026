@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UDA-city Heat Risk Indicator</title>
+<style>
+  :root {
+    --ink: #1e2933;
+    --muted: #5a6570;
+    --line: #d7dee6;
+    --paper: #ffffff;
+    --wash: #f4f7f6;
+    --risk: #b73a48;
+    --risk-dark: #8f2330;
+    --hazard: #d66b2d;
+    --exposure: #2f7d7e;
+    --vulnerability: #7456a6;
+    --steady: #2f6f4e;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    color: var(--ink);
+    background: var(--wash);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1.55;
+  }
+
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 18px 56px;
+  }
+
+  .mast {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.7fr);
+    gap: 20px;
+    align-items: end;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 22px;
+  }
+
+  h1, h2, h3 {
+    line-height: 1.15;
+    margin: 0;
+    letter-spacing: 0;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 4vw, 4rem);
+    max-width: 940px;
+  }
+
+  h2 {
+    font-size: 1.45rem;
+    margin-bottom: 14px;
+  }
+
+  h3 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .lede {
+    color: var(--muted);
+    font-size: 1.1rem;
+    max-width: 780px;
+    margin-top: 14px;
+  }
+
+  .summary {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  .summary strong {
+    display: block;
+    font-size: 2rem;
+    color: var(--risk-dark);
+    margin-bottom: 4px;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .pill {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 5px 10px;
+    background: var(--paper);
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .band {
+    margin-top: 24px;
+    padding: 22px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .metric {
+    border-left: 4px solid var(--steady);
+    padding: 12px 14px;
+    background: #f9fbfa;
+    border-radius: 6px;
+  }
+
+  .metric b {
+    display: block;
+    font-size: 1.7rem;
+  }
+
+  .metric span {
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+
+  .bar-list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .bar-row {
+    display: grid;
+    grid-template-columns: 170px minmax(140px, 1fr) 54px;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .bar-label {
+    font-weight: 650;
+    font-size: 0.95rem;
+  }
+
+  .track {
+    height: 22px;
+    background: #edf1f2;
+    border: 1px solid #dce4e7;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .fill {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--risk), var(--risk-dark));
+    border-radius: inherit;
+  }
+
+  .value {
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  .pillars {
+    display: grid;
+    gap: 12px;
+  }
+
+  .pillar-row {
+    display: grid;
+    grid-template-columns: 170px repeat(3, minmax(80px, 1fr));
+    gap: 10px;
+    align-items: center;
+  }
+
+  .pillar-name {
+    font-weight: 650;
+  }
+
+  .mini {
+    display: grid;
+    gap: 4px;
+  }
+
+  .mini label {
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+
+  .mini .track {
+    height: 14px;
+  }
+
+  .mini .hazard { background: var(--hazard); }
+  .mini .exposure { background: var(--exposure); }
+  .mini .vulnerability { background: var(--vulnerability); }
+
+  .formula {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  code {
+    background: #edf1f2;
+    border: 1px solid #d9e0e4;
+    border-radius: 5px;
+    padding: 2px 5px;
+    white-space: nowrap;
+  }
+
+  .callout {
+    border-left: 4px solid var(--risk);
+    background: #fff7f5;
+    padding: 14px 16px;
+    border-radius: 6px;
+  }
+
+  .notes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  ul {
+    padding-left: 20px;
+    margin: 0;
+  }
+
+  li + li {
+    margin-top: 8px;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 820px;
+    background: var(--paper);
+  }
+
+  th, td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    background: #edf2f2;
+    font-size: 0.86rem;
+  }
+
+  td.num, th.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .footer {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  a {
+    color: var(--risk-dark);
+  }
+
+  @media (max-width: 850px) {
+    .mast,
+    .grid,
+    .formula,
+    .notes {
+      grid-template-columns: 1fr;
+    }
+
+    .bar-row {
+      grid-template-columns: 120px minmax(100px, 1fr) 48px;
+    }
+
+    .pillar-row {
+      grid-template-columns: 1fr;
+      gap: 6px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+    }
+  }
+</style>
+</head>
+<body>
+
+<main class="page">
+  <section class="mast">
+    <div>
+      <h1>UDA-city heat risk is highest in dense, vulnerable hotspots.</h1>
+      <p class="lede">Present hot-humid SUEWS run for 10 synthetic neighbourhoods. The final indicator keeps heat hazard, population exposure, and social vulnerability separate, then combines them with a blended equity-aware score.</p>
+      <div class="meta">
+        <span class="pill">Present hot-humid scenario</span>
+        <span class="pill">SUEWS/SuPy 2026.6.5</span>
+        <span class="pill">Danger threshold: T2 &gt; 35 C</span>
+        <span class="pill">14-day spin-up removed</span>
+      </div>
+    </div>
+    <aside class="summary">
+      <strong>Kampong Lama</strong>
+      <p>Highest combined socio-economic heat-risk score. Jade Gardens is hottest, but Kampong Lama combines high heat, high exposure, and high vulnerability.</p>
+    </aside>
+  </section>
+
+  <section class="band grid" aria-label="Headline metrics">
+    <div class="metric">
+      <b>62 h</b>
+      <span>Most dangerous-heat hours: Jade Gardens</span>
+    </div>
+    <div class="metric">
+      <b>1.000</b>
+      <span>Highest combined risk score: Kampong Lama</span>
+    </div>
+    <div class="metric">
+      <b>3 pillars</b>
+      <span>Hazard, exposure, and vulnerability are shown separately before combining.</span>
+    </div>
+  </section>
+
+  <section class="band">
+    <h2>Risk Ranking</h2>
+    <div class="bar-list" role="img" aria-label="Ranked combined risk score by neighbourhood">
+      <div class="bar-row"><span class="bar-label">Kampong Lama</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="value">1.000</span></div>
+      <div class="bar-row"><span class="bar-label">Dhobi Lines</span><span class="track"><span class="fill" style="width:82.3%"></span></span><span class="value">0.823</span></div>
+      <div class="bar-row"><span class="bar-label">Fuzhou Lanes</span><span class="track"><span class="fill" style="width:79.9%"></span></span><span class="value">0.799</span></div>
+      <div class="bar-row"><span class="bar-label">Mlima Moto</span><span class="track"><span class="fill" style="width:52.1%"></span></span><span class="value">0.521</span></div>
+      <div class="bar-row"><span class="bar-label">Jade Gardens</span><span class="track"><span class="fill" style="width:44.6%"></span></span><span class="value">0.446</span></div>
+      <div class="bar-row"><span class="bar-label">Taman Melati</span><span class="track"><span class="fill" style="width:37.4%"></span></span><span class="value">0.374</span></div>
+      <div class="bar-row"><span class="bar-label">Serendib Rise</span><span class="track"><span class="fill" style="width:19.1%"></span></span><span class="value">0.191</span></div>
+      <div class="bar-row"><span class="bar-label">Lusitano Square</span><span class="track"><span class="fill" style="width:11.1%"></span></span><span class="value">0.111</span></div>
+      <div class="bar-row"><span class="bar-label">Victoria Exchange</span><span class="track"><span class="fill" style="width:9.7%"></span></span><span class="value">0.097</span></div>
+      <div class="bar-row"><span class="bar-label">Zheng He Towers</span><span class="track"><span class="fill" style="width:0%"></span></span><span class="value">0.000</span></div>
+    </div>
+  </section>
+
+  <section class="band">
+    <h2>Why The Ranking Changes</h2>
+    <div class="formula">
+      <div>
+        <h3>Indicator A: no-zero geometric risk</h3>
+        <p><code>A = (hazard x exposure x vulnerability)^(1/3)</code></p>
+        <p>This keeps the UNDRR-style trio together, but avoids the false-zero problem where a populated neighbourhood is treated as having no exposure.</p>
+      </div>
+      <div>
+        <h3>Indicator C: equity-weighted risk</h3>
+        <p><code>C = 0.25 hazard + 0.25 exposure + 0.50 vulnerability</code></p>
+        <p>This gives more weight to people with less ability to cope: low AC access, outdoor work, deprivation, older adults, and young children.</p>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:16px">
+      <p><strong>Final score:</strong> <code>risk = 0.5 A + 0.5 C</code>, re-scaled to 0-1. This keeps the physical heat result visible while making the social vulnerability argument explicit.</p>
+    </div>
+  </section>
+
+  <section class="band">
+    <h2>Hazard, Exposure, Vulnerability</h2>
+    <div class="pillars" role="img" aria-label="Separate hazard exposure and vulnerability scores by neighbourhood">
+      <div class="pillar-row">
+        <span class="pillar-name">Kampong Lama</span>
+        <span class="mini"><label>hazard 0.677</label><span class="track"><span class="fill hazard" style="width:67.7%"></span></span></span>
+        <span class="mini"><label>exposure 1.000</label><span class="track"><span class="fill exposure" style="width:100%"></span></span></span>
+        <span class="mini"><label>vulnerability 0.966</label><span class="track"><span class="fill vulnerability" style="width:96.6%"></span></span></span>
+      </div>
+      <div class="pillar-row">
+        <span class="pillar-name">Jade Gardens</span>
+        <span class="mini"><label>hazard 1.000</label><span class="track"><span class="fill hazard" style="width:100%"></span></span></span>
+        <span class="mini"><label>exposure 0.267</label><span class="track"><span class="fill exposure" style="width:26.7%"></span></span></span>
+        <span class="mini"><label>vulnerability 0.543</label><span class="track"><span class="fill vulnerability" style="width:54.3%"></span></span></span>
+      </div>
+      <div class="pillar-row">
+        <span class="pillar-name">Fuzhou Lanes</span>
+        <span class="mini"><label>hazard 0.355</label><span class="track"><span class="fill hazard" style="width:35.5%"></span></span></span>
+        <span class="mini"><label>exposure 1.000</label><span class="track"><span class="fill exposure" style="width:100%"></span></span></span>
+        <span class="mini"><label>vulnerability 0.981</label><span class="track"><span class="fill vulnerability" style="width:98.1%"></span></span></span>
+      </div>
+      <div class="pillar-row">
+        <span class="pillar-name">Mlima Moto</span>
+        <span class="mini"><label>hazard 0.081</label><span class="track"><span class="fill hazard" style="width:8.1%"></span></span></span>
+        <span class="mini"><label>exposure 1.000</label><span class="track"><span class="fill exposure" style="width:100%"></span></span></span>
+        <span class="mini"><label>vulnerability 1.000</label><span class="track"><span class="fill vulnerability" style="width:100%"></span></span></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="band notes">
+    <div>
+      <h2>Where The Bridge Holds</h2>
+      <ul>
+        <li>The SUEWS run gives a clear environmental heat hazard for the same weather window across all 10 neighbourhoods.</li>
+        <li>The risk framing separates the physical heat signal from who is exposed and how able people are to cope.</li>
+        <li>The changed score fixes the original false-zero exposure problem while keeping the three-pillar structure visible.</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Where It Breaks</h2>
+      <ul>
+        <li><code>T2 &gt; 35 C</code> is a dry-bulb heat proxy, not a health outcome. A humid-heat metric would be a strong next step.</li>
+        <li>The socio-economic layer is synthetic and neighbourhood-level. It supports relative ranking, not absolute claims about real people.</li>
+        <li>The final index is a judgement call. The weights make an equity argument, not a universal law.</li>
+        <li><code>0.000</code> means lowest relative score here, not no heat risk.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="band">
+    <h2>Data Table</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Neighbourhood</th>
+            <th>Type</th>
+            <th class="num">Heat hours</th>
+            <th class="num">Hazard</th>
+            <th class="num">Exposure</th>
+            <th class="num">Vulnerability</th>
+            <th class="num">Risk</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Kampong Lama</td><td>hotspot</td><td class="num">42</td><td class="num">0.677</td><td class="num">1.000</td><td class="num">0.966</td><td class="num">1.000</td></tr>
+          <tr><td>2</td><td>Dhobi Lines</td><td>hotspot</td><td class="num">26</td><td class="num">0.419</td><td class="num">1.000</td><td class="num">0.943</td><td class="num">0.823</td></tr>
+          <tr><td>3</td><td>Fuzhou Lanes</td><td>hotspot</td><td class="num">22</td><td class="num">0.355</td><td class="num">1.000</td><td class="num">0.981</td><td class="num">0.799</td></tr>
+          <tr><td>4</td><td>Mlima Moto</td><td>hotspot</td><td class="num">5</td><td class="num">0.081</td><td class="num">1.000</td><td class="num">1.000</td><td class="num">0.521</td></tr>
+          <tr><td>5</td><td>Jade Gardens</td><td>refuge</td><td class="num">62</td><td class="num">1.000</td><td class="num">0.267</td><td class="num">0.543</td><td class="num">0.446</td></tr>
+          <tr><td>6</td><td>Taman Melati</td><td>refuge</td><td class="num">47</td><td class="num">0.758</td><td class="num">0.267</td><td class="num">0.570</td><td class="num">0.374</td></tr>
+          <tr><td>7</td><td>Serendib Rise</td><td>refuge</td><td class="num">26</td><td class="num">0.419</td><td class="num">0.267</td><td class="num">0.509</td><td class="num">0.191</td></tr>
+          <tr><td>8</td><td>Lusitano Square</td><td>core</td><td class="num">5</td><td class="num">0.081</td><td class="num">0.833</td><td class="num">0.385</td><td class="num">0.111</td></tr>
+          <tr><td>9</td><td>Victoria Exchange</td><td>core</td><td class="num">5</td><td class="num">0.081</td><td class="num">0.833</td><td class="num">0.362</td><td class="num">0.097</td></tr>
+          <tr><td>10</td><td>Zheng He Towers</td><td>core</td><td class="num">2</td><td class="num">0.032</td><td class="num">0.833</td><td class="num">0.325</td><td class="num">0.000</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:12px">Download the derived data: <a href="data/risk_present_ac_combined.csv">risk_present_ac_combined.csv</a></p>
+  </section>
+
+  <section class="band footer">
+    <h2>SUEWS Citation</h2>
+    <p>Jarvi, L., Grimmond, C.S.B. and Christen, A. (2011). The Surface Urban Energy and Water Balance Scheme (SUEWS): Evaluation in Los Angeles and Vancouver. <em>Journal of Hydrology</em>, 411(3-4), 219-237. DOI: <a href="https://doi.org/10.1016/j.jhydrol.2011.10.001">10.1016/j.jhydrol.2011.10.001</a>.</p>
+    <p style="margin-top:8px">Ward, H.C., Kotthaus, S., Jarvi, L. and Grimmond, C.S.B. (2016). Surface Urban Energy and Water Balance Scheme (SUEWS): Development and evaluation at two UK sites. <em>Urban Climate</em>, 18, 1-32. DOI: <a href="https://doi.org/10.1016/j.uclim.2016.05.001">10.1016/j.uclim.2016.05.001</a>.</p>
+    <p style="margin-top:8px">Guideline alignment: this page focuses on the public GitHub Pages story, policy relevance and honest bridging, presentation clarity, scientific caveats, and SUEWS citation requirements described in the hackathon task brief.</p>
+  </section>
+</main>
+</body>
+</html>
